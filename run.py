@@ -12,13 +12,25 @@ import piexif
 import requests
 from bs4 import BeautifulSoup
 
+
+
 """
 method how to write saved data in new image
-
 with open('saved_exif.txt', 'r', encoding='ascii') as f:
+    path_to_image = './original (11).jpg'
     lines = f.readlines()
-    string_ = piexif.dump(pickle.loads(base64.b64decode(lines[365])))
-    piexif.insert(string_, "./IMG_0917.JPG")"""
+    # lines[365] a specific exif string is specified, it is better to put a random string
+    exif_saved_data = pickle.loads(base64.b64decode(lines[365]))
+    exif_dict = piexif.load(path_to_image)
+    # check orientation on original image
+    if piexif.ImageIFD.Orientation in exif_dict['0th']:
+        orientation = exif_dict['0th'][piexif.ImageIFD.Orientation]
+        exif_saved_data['0th'][piexif.ImageIFD.Orientation] = orientation
+    else:
+        # set default flag orientation
+        exif_saved_data['0th'][piexif.ImageIFD.Orientation] = 1
+    piexif.insert(piexif.dump(exif_saved_data), path_to_image)"""
+
 
 
 def split(arr, size):
